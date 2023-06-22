@@ -1,17 +1,24 @@
 package service
 
 import (
-	"context"
-
 	"github.com/fazarrahman/contact-app/contact/entity"
 	"github.com/fazarrahman/contact-app/lib/errorHelper"
 	"github.com/fazarrahman/contact-app/model"
 	"github.com/gin-gonic/gin"
 )
 
-func validate(r *model.Contacts, isUpdate bool) *errorHelper.Error {
-	if isUpdate && r.Id == "" {
-		return errorHelper.BadRequest("Id is required")
+func (s *Svc) validate(c *gin.Context, r *model.Contacts, isUpdate bool) *errorHelper.Error {
+	if isUpdate {
+		if r.Id == "" {
+			return errorHelper.BadRequest("Id is required")
+		}
+		ct, err := s.ContactRepository.GetContactsById(c, r.Id)
+		if err != nil {
+			return errorHelper.InternalServerError(err.Message)
+		}
+		if ct == nil {
+			return errorHelper.BadRequest("Invalid Id")
+		}
 	}
 
 	if r.Name == "" {
@@ -44,8 +51,27 @@ func (s *Svc) GetContacts(ctx *gin.Context) ([]*model.Contacts, *errorHelper.Err
 	return ctModel, nil
 }
 
-func (s *Svc) InsertContact(ctx context.Context, contact *model.Contacts) *errorHelper.Error {
-	err := validate(contact, false)
+func (s *Svc) InsertContact(ctx *gin.Context, contact *model.Contacts) *errorHelper.Error {
+	err := s.validate(ctx, contact, false)
+	if err != nil {
+		return err
+	}
+
+	err = s.ContactRepository.UpsertContact(ctx, &entity.Contacts{
+		Name:   contact.Name,
+		Gender: contact.Gender,
+		Phone:  contact.Phone,
+		Email:  contact.Email,
+	})
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *Svc) UpdateContact(ctx *gin.Context, contact *model.Contacts) *errorHelper.Error {
+	err := s.validate(ctx, contact, true)
 	if err != nil {
 		return err
 	}
@@ -57,6 +83,15 @@ func (s *Svc) InsertContact(ctx context.Context, contact *model.Contacts) *error
 		Phone:  contact.Phone,
 		Email:  contact.Email,
 	})
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *Svc) DeleteContact(ctx *gin.Context, id string) *errorHelper.Error {
+	err := s.ContactRepository.DeleteContact(ctx, id)
 	if err != nil {
 		return err
 	}

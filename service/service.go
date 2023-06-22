@@ -21,4 +21,6 @@ func New(_contactRepo contactRepo.ContactRepository) *Svc {
 type ServiceInterface interface {
 	GetContacts(ctx context.Context) ([]*model.Contacts, *errorHelper.Error)
 	InsertContact(ctx context.Context, contact *model.Contacts) *errorHelper.Error
+	UpdateContact(ctx context.Context, contact *model.Contacts) *errorHelper.Error
+	DeleteContact(ctx context.Context, id string) *errorHelper.Error
 }

@@ -23,8 +23,7 @@ func New() (*sqlx.DB, error) {
 		phone VARCHAR(255) NULL,
 		email VARCHAR(255) NULL,
 		created_at timestamp NOT NULL,
-		updated_at timestamp NULL,
-		UNIQUE(phone)
+		updated_at timestamp NULL
 	);`)
 	if err != nil {
 		log.Fatalln(err)
