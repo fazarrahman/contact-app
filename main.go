@@ -16,7 +16,7 @@ import (
 func main() {
 	err := godotenv.Load()
 	if err != nil {
-	  log.Fatal("Error loading .env file")
+		log.Fatal("Error loading .env file")
 	}
 
 	db, err := sqllitedb.New()
@@ -35,7 +35,7 @@ func main() {
 		func(c *gin.Context) {
 			c.JSON(http.StatusOK, "pong")
 		})
-	controller.New(svc).Register(g.Group("/api/auth"))
+	controller.New(svc).Register(g.Group("/api/v1"))
 
 	g.Run(":" + lib.GetEnv("APP_PORT"))
 }

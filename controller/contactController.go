@@ -2,6 +2,7 @@ package controller
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/fazarrahman/contact-app/model"
 	"github.com/fazarrahman/contact-app/service"
@@ -66,7 +67,24 @@ func (r *Rest) UpdateContact(c *gin.Context) {
 }
 
 func (r *Rest) GetContacts(c *gin.Context) {
-	contacts, err := r.service.GetContacts(c)
+	var limit int = 5
+	var offset int = 0
+	var er error
+	limitStr, ok := c.GetQuery("limit")
+	if ok {
+		limit, er = strconv.Atoi(limitStr)
+		if er != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"success": false, "message": "Invalid limit value"})
+		}
+	}
+	offsetStr, ok := c.GetQuery("")
+	if ok {
+		offset, er = strconv.Atoi(offsetStr)
+		if er != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"success": false, "message": "Invalid offset value"})
+		}
+	}
+	contacts, err := r.service.GetContacts(c, limit, offset)
 	if err != nil {
 		c.JSON(err.StatusCode, gin.H{"success": false, "error": err})
 		return

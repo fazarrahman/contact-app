@@ -31,8 +31,8 @@ func (s *Svc) validate(c *gin.Context, r *model.Contacts, isUpdate bool) *errorH
 	return nil
 }
 
-func (s *Svc) GetContacts(ctx *gin.Context) ([]*model.Contacts, *errorHelper.Error) {
-	contacts, err := s.ContactRepository.GetContacts(ctx)
+func (s *Svc) GetContacts(ctx *gin.Context, limit, offset int) ([]*model.Contacts, *errorHelper.Error) {
+	contacts, err := s.ContactRepository.GetContacts(ctx, limit, offset)
 	if err != nil {
 		return nil, err
 	}

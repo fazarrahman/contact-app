@@ -19,10 +19,10 @@ func New(db *sqlx.DB) *Mysqldb {
 	return &Mysqldb{db: db}
 }
 
-func (m *Mysqldb) GetContacts(ctx context.Context) ([]*ent.Contacts, *errorHelper.Error) {
+func (m *Mysqldb) GetContacts(ctx context.Context, limit, offset int) ([]*ent.Contacts, *errorHelper.Error) {
 	var contacts []*ent.Contacts
 	err := m.db.SelectContext(ctx, &contacts, `SELECT id, name, gender, phone, email, created_at, updated_at
-	FROM contacts `)
+	FROM contacts LIMIT ? OFFSET ?`, limit, offset)
 	if err == sql.ErrNoRows {
 		return nil, nil
 	} else if err != nil {

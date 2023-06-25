@@ -8,7 +8,7 @@ import (
 )
 
 type ContactRepository interface {
-	GetContacts(ctx context.Context) ([]*ent.Contacts, *errorHelper.Error)
+	GetContacts(ctx context.Context, limit, offset int) ([]*ent.Contacts, *errorHelper.Error)
 	GetContactsById(ctx context.Context, id string) (*ent.Contacts, *errorHelper.Error)
 	UpsertContact(ctx context.Context, contact *ent.Contacts) *errorHelper.Error
 	DeleteContact(ctx context.Context, id string) *errorHelper.Error
