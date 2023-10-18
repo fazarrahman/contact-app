@@ -21,7 +21,7 @@ func New(_svc *service.Svc) *Rest {
 // Register ...
 func (r *Rest) Register(g *gin.RouterGroup) {
 	g.GET("/contact", r.GetContacts)
-	g.POST("/contact", r.InsertContact)
+	g.POST("/contact", r.InsertContactsss)
 	g.PUT("/contact/:id", r.UpdateContact)
 	g.DELETE("/contact/:id", r.DeleteContact)
 }
