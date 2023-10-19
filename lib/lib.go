@@ -11,6 +11,6 @@ func GetEnv(key string) string {
 		return value
 	}
 
-	log.Printf("Env %s value not exist \n", key)
+	log.Printf("Env %s value not exist \n", key)ss
 	return ""
 }
